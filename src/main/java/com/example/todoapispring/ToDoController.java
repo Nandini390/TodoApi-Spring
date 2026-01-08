@@ -20,7 +20,7 @@ public class ToDoController {
     @GetMapping("/todos")
     public  ResponseEntity<List<ToDo>> getTodos(){
 
-        return ResponseEntity.ok(toDoList);
+        return ResponseEntity.status(HttpStatus.OK).body(toDoList);
     }
 
     @PostMapping("/todos")
