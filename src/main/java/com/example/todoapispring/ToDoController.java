@@ -1,6 +1,7 @@
 package com.example.todoapispring;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,10 +23,9 @@ public class ToDoController {
     }
 
     @PostMapping("/todos")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ToDo createTodo(@RequestBody ToDo newTodo){
+    public ResponseEntity<ToDo> createTodo(@RequestBody ToDo newTodo){
         toDoList.add(newTodo);
-        return newTodo;
+        return ResponseEntity.status(HttpStatus.CREATED).body(newTodo);
     }
 
 }
