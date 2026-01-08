@@ -18,8 +18,9 @@ public class ToDoController {
     }
 
     @GetMapping("/todos")
-    public List<ToDo> getTodos(){
-        return toDoList;
+    public  ResponseEntity<List<ToDo>> getTodos(){
+
+        return ResponseEntity.ok(toDoList);
     }
 
     @PostMapping("/todos")
