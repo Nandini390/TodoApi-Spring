@@ -29,6 +29,17 @@ public class ToDoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newTodo);
     }
 
+    @GetMapping("/todos/{todoId}")
+    public ResponseEntity<ToDo> getTodobyId(@PathVariable long todoId){
+        for(ToDo todo:toDoList){
+            if(todo.getId()==todoId){
+                return ResponseEntity.ok(todo);
+            }
+        }
+        //when we return notFound(), it is returning builder object, hence we have to add .build()
+        return ResponseEntity.notFound().build();
+    }
+
 }
 
 
