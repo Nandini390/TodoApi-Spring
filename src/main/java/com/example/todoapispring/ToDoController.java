@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/v1/todos")
 public class ToDoController {
     private static List<ToDo> toDoList;
 
@@ -17,28 +18,73 @@ public class ToDoController {
         toDoList.add(new ToDo(2,true,"Todo 2", 2));
     }
 
-    @GetMapping("/todos")
+    @GetMapping
     public  ResponseEntity<List<ToDo>> getTodos(){
 
         return ResponseEntity.status(HttpStatus.OK).body(toDoList);
     }
 
-    @PostMapping("/todos")
+    @GetMapping("/status")
+    //required=false, makes it optional i.e. it is not mandatory to send a query param
+    //byDefault the value is false, hence when we set defaultValue="true" , it makes it true.
+    public ResponseEntity<List<ToDo>> getTodos(@RequestParam(required = false, defaultValue = "true") boolean isCompleted){
+        System.out.println("Query Param is: "+ isCompleted);
+        return ResponseEntity.ok(toDoList);
+    }
+
+    @PostMapping
     public ResponseEntity<ToDo> createTodo(@RequestBody ToDo newTodo){
         toDoList.add(newTodo);
         return ResponseEntity.status(HttpStatus.CREATED).body(newTodo);
     }
 
-    @GetMapping("/todos/{todoId}")
-    public ResponseEntity<ToDo> getTodobyId(@PathVariable long todoId){
+    @GetMapping("/{todoId}")
+    public ResponseEntity<?> getTodobyId(@PathVariable long todoId){
         for(ToDo todo:toDoList){
             if(todo.getId()==todoId){
                 return ResponseEntity.ok(todo);
             }
         }
         //when we return notFound(), it is returning builder object, hence we have to add .build()
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("TODO_NOT_FOUND");
     }
+
+    @DeleteMapping("/{todoId}")
+    public ResponseEntity<?> deleteTodo(@PathVariable long todoId){
+        for(ToDo todo: toDoList){
+            if(todo.getUserId()==todoId){
+                toDoList.remove(todo);
+                return ResponseEntity.ok("TODO_DELETED_SUCCESSFULLY");
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("TODO_NOT_FOUND");
+    }
+
+    @PatchMapping("/{todoId}")
+    public ResponseEntity<?> updateTodo(@PathVariable long todoId,@RequestBody java.util.Map<String, Object> updates){
+        for (ToDo todo : toDoList) {
+
+            if (todo.getId() == todoId) {
+
+                if (updates.containsKey("completed")) {
+                    todo.setCompleted((Boolean) updates.get("completed"));
+                }
+                if (updates.containsKey("title")) {
+                    todo.setTitle((String) updates.get("title"));
+                }
+                if (updates.containsKey("userId")) {
+                    todo.setUserId(((Number) updates.get("userId")).intValue());
+                }
+
+                return ResponseEntity.ok(todo);
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("TODO_NOT_FOUND");
+
+    }
+
+
 
 }
 
