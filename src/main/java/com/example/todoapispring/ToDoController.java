@@ -15,9 +15,11 @@ public class ToDoController {
     private static List<ToDo> toDoList;
 
     private ToDoService toDoService;
+    private ToDoService toDoService2;
 
-    public ToDoController(@Qualifier("AnotherToDoService") ToDoService toDoService){
+    public ToDoController(@Qualifier("AnotherToDoService") ToDoService toDoService, @Qualifier("FakeToDoService") ToDoService toDoService2){
         this.toDoService=toDoService;
+        this.toDoService2=toDoService2;
         toDoList=new ArrayList<>();
         toDoList.add(new ToDo(1,false,"Todo 1", 1));
         toDoList.add(new ToDo(2,true,"Todo 2", 2));
@@ -34,6 +36,7 @@ public class ToDoController {
     //byDefault the value is false, hence when we set defaultValue="true" , it makes it true.
     public ResponseEntity<List<ToDo>> getTodos(@RequestParam(required = false, defaultValue = "true") boolean isCompleted){
         System.out.println("Query Param is: "+ isCompleted + " ...." + toDoService.doSomething());
+        System.out.println("  ToDoService2: " + toDoService2.doSomething());
         return ResponseEntity.ok(toDoList);
     }
 
