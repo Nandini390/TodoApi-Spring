@@ -12,7 +12,10 @@ import java.util.List;
 public class ToDoController {
     private static List<ToDo> toDoList;
 
-    public ToDoController(){
+    private ToDoService toDoService;
+
+    public ToDoController(ToDoService toDoService){
+        this.toDoService=toDoService;
         toDoList=new ArrayList<>();
         toDoList.add(new ToDo(1,false,"Todo 1", 1));
         toDoList.add(new ToDo(2,true,"Todo 2", 2));
@@ -28,7 +31,7 @@ public class ToDoController {
     //required=false, makes it optional i.e. it is not mandatory to send a query param
     //byDefault the value is false, hence when we set defaultValue="true" , it makes it true.
     public ResponseEntity<List<ToDo>> getTodos(@RequestParam(required = false, defaultValue = "true") boolean isCompleted){
-        System.out.println("Query Param is: "+ isCompleted);
+        System.out.println("Query Param is: "+ isCompleted + " ...." + toDoService.doSomething());
         return ResponseEntity.ok(toDoList);
     }
 
