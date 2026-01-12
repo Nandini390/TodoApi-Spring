@@ -1,5 +1,7 @@
 package com.example.todoapispring;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +16,7 @@ public class ToDoController {
 
     private ToDoService toDoService;
 
-    public ToDoController(ToDoService toDoService){
+    public ToDoController(@Qualifier("AnotherToDoService") ToDoService toDoService){
         this.toDoService=toDoService;
         toDoList=new ArrayList<>();
         toDoList.add(new ToDo(1,false,"Todo 1", 1));
